@@ -49,3 +49,7 @@ and the Barrier is used like this:
 ```
 
 [docs at https://godoc.org/github.com/glycerine/selectable](https://godoc.org/github.com/glycerine/selectable])
+
+Author: Jason E. Aten, Ph.D.
+
+license: MIT
