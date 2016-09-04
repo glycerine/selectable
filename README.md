@@ -37,6 +37,8 @@ and the Barrier is used like this:
                   // ReleaseAndReset <- struct{}{} was invoked
                   
                case <-b.Done:
+                  // Since b.Wait() could return a nil channel
+                  // if the Barrier is shutting down,
                   // *always* include a <-b.Done in
                   // your select to avoid deadlock
                   // on shutdown.
