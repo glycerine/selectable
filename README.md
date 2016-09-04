@@ -24,6 +24,15 @@ the cental logic inside the Barrier looks like this:
             return
          }
       }
+
+...
+// Wait returns a channel to wait on. The
+// channel will be closed when
+// `b.ReleaseAndReset <- struct{}{}`
+// is invoked.
+func (b *Barrier) Wait() chan struct{} {
+	return <-b.waitForRelease
+}
 ```
 
 and the Barrier is used like this:
