@@ -21,7 +21,8 @@ sample use:
                   // *always* include a <-b.Done in
                   // your select to avoid deadlock
                   // on shutdown.
-                  ...
+                  return
+               ...
             }
           }
        }
@@ -53,8 +54,8 @@ type Barrier struct {
 	//
 	ReleaseAndReset chan struct{}
 
-	// RequestStop is used to stop the Barrier
-	// goroutine.
+	// RequestStop is used to shutdown the Barrier
+	// and halt its backing goroutine.
 	//
 	// Clients may close(b.RequestStop) in order to
 	// shutdown the Barrier. Also, sending false on
@@ -129,16 +130,14 @@ func NewBarrier() *Barrier {
 
 // Wait returns a channel to wait on. The
 // channel will be closed when
-//
-//    b.ReleaseAndReset <- struct{}{}
-//
+// `b.ReleaseAndReset <- struct{}{}`
 // is invoked.
 //
 // If the Barrier is shutting down, the
 // returned channel may be nil. Hence
 // you should always invoke Wait() from
 // within a select{} statement. Include
-// case <-b.Done:
+// `case <-b.Done:`
 // in your select to handle shutdown
 // gracefully.
 //
