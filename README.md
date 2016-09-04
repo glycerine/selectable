@@ -9,9 +9,10 @@ the cental logic inside the Barrier looks like this:
 func NewBarrier() *Barrier {
    b := &Barrier{
       ReleaseAndReset: make(chan struct{}),
-      waitForRelease: make(chan chan struct{}),
       RequestStop: make(chan bool),
       Done:        make(chan struct{}),
+
+      waitForRelease: make(chan chan struct{}),
       waitCh:      make(chan struct{}),
    }
 
