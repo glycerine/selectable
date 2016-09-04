@@ -11,7 +11,7 @@ ReleaseAndReset.
 
 sample use:
 
-      b := selectable.NewBarrier()
+         b := selectable.NewBarrier()
          go func() {
          for {
             select {
@@ -44,7 +44,9 @@ type Barrier struct {
 	// Send on the ReleaseAndReset channel
 	// to release all waiting go routines
 	// and establish a new channel to
-	// wait on.
+	// wait on. The new channel will
+	// be returned by subsequent calls
+	// to Wait().
 	//
 	// e.g. b.ReleaseAndReset <- struct{}{}
 	//
@@ -54,14 +56,16 @@ type Barrier struct {
 	// goroutine.
 	//
 	// Clients may close(b.RequestStop) in order to
-	// shutdown the Barrier b. Sending false on
-	// b.RequestStop will do the same thing. Waiting
+	// shutdown the Barrier. Also, sending false on
+	// b.RequestStop will also intiate shutdown of
+	// the goroutine backing the Barrier. Waiting
 	// goroutines will not be released by these
-	// actions.
+	// actions, because they cause false to be
+	// conveyed on the RequestStop channel.
 	//
 	// If client instead sends true on b.RequestStop,
-	// all waiting goroutines will be released before
-	// shutting down.
+	// all waiting goroutines will be released, and then
+	// the Barrier goroutine will be shut down.
 	//
 	RequestStop chan bool
 
