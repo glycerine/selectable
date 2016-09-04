@@ -11,8 +11,8 @@ ReleaseAndReset.
 
 sample use:
 
-         b := selectable.NewBarrier()
-         go func() {
+      b := selectable.NewBarrier()
+      go func() {
          for {
             select {
                case <-b.Wait():
@@ -22,6 +22,7 @@ sample use:
                   // your select to avoid deadlock
                   // on shutdown.
                   ...
+            }
           }
        }
 
