@@ -2,7 +2,31 @@
 selectable.Barrier is a select-friendly rendezvous
 point.
 
+A select statement that wants to
+to wait on a Barrier should
+read a wait channel from Wait()
+then wait on that channel. It will
+be closed when struct{}{} is sent to
+ReleaseAndReset.
+
+sample use:
+
+      b := selectable.NewBarrier()
+         go func() {
+      for {
+          select {
+              case <-b.Wait():
+                 // ReleaseAndReset <- struct{}{} was invoked
+              case <-b.Done
+                 // *always* include a <-b.Done in
+                 // your select to avoid deadlock
+                 // on shutdown.
+                 ...
+          }
+       }
+
 copyright (c) 2016 Jason E. Aten
+
 license: MIT
 */
 package selectable
@@ -15,30 +39,6 @@ package selectable
 // they don't play nicely with select.
 //
 type Barrier struct {
-
-	// a select statement that wants to
-	// to wait on a Barrier should
-	// read a wait channel from Wait()
-	// then wait on that channel. It will
-	// be closed when true is sent to
-	// ReleaseAndReset.
-	//
-	// sample use:
-	/*
-			   b := selectable.NewBarrier()
-		       go func() {
-			   for {
-			       select {
-			           case <-b.Wait():
-			              // ReleaseAndReset was called
-			           case <-b.Done
-			              // *always* include a <-b.Done in
-			              // your select to avoid deadlock
-			              // on shutdown.
-			              ...
-			       }
-			    }
-	*/
 	waitForRelease chan chan struct{}
 
 	// Send on the ReleaseAndReset channel
