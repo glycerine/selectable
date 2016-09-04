@@ -30,7 +30,7 @@ func NewBarrier() *Barrier {
             if withRelease {
                close(b.waitCh) // release all waiting goroutines
             }
-            close(b.waitForRelease) // return nil wait channel from now all
+            close(b.waitForRelease) // return nil wait channel from now on.
             close(b.Done) // signal that shutdown is complete
             return
          }
