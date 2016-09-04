@@ -6,6 +6,16 @@ selectable.Barrier is a select{}-friendly barrier. A rendezvous point for gorout
 the cental logic inside the Barrier looks like this:
 
 ```
+func NewBarrier() *Barrier {
+   b := &Barrier{
+      ReleaseAndReset: make(chan struct{}),
+      waitForRelease: make(chan chan struct{}),
+      RequestStop: make(chan bool),
+      Done:        make(chan struct{}),
+      waitCh:      make(chan struct{}),
+   }
+
+   go func() {
       for {
          select {
          case <-b.ReleaseAndReset:
@@ -24,6 +34,9 @@ the cental logic inside the Barrier looks like this:
             return
          }
       }
+   }()
+   return b
+}
 
 ...
 // Wait returns a channel to wait on. The
@@ -31,7 +44,7 @@ the cental logic inside the Barrier looks like this:
 // `b.ReleaseAndReset <- struct{}{}`
 // is invoked.
 func (b *Barrier) Wait() chan struct{} {
-	return <-b.waitForRelease
+   return <-b.waitForRelease
 }
 ```
 

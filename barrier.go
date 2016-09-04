@@ -84,12 +84,10 @@ type Barrier struct {
 func NewBarrier() *Barrier {
 	b := &Barrier{
 		ReleaseAndReset: make(chan struct{}),
-
-		waitForRelease: make(chan chan struct{}),
-
-		RequestStop: make(chan bool),
-		Done:        make(chan struct{}),
-		waitCh:      make(chan struct{}),
+		waitForRelease:  make(chan chan struct{}),
+		RequestStop:     make(chan bool),
+		Done:            make(chan struct{}),
+		waitCh:          make(chan struct{}),
 	}
 
 	go func() {
