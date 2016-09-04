@@ -1,5 +1,5 @@
 # selectable
-a select{}-friendly barrier. A rendezvous point for goroutines.
+selectable.Barrier is a select{}-friendly barrier. A rendezvous point for goroutines.
 
 [docs at https://godoc.org/github.com/glycerine/selectable](https://godoc.org/github.com/glycerine/selectable])
 
