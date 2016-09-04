@@ -13,15 +13,15 @@ sample use:
 
       b := selectable.NewBarrier()
          go func() {
-      for {
-          select {
-              case <-b.Wait():
-                 // ReleaseAndReset <- struct{}{} was invoked
-              case <-b.Done
-                 // *always* include a <-b.Done in
-                 // your select to avoid deadlock
-                 // on shutdown.
-                 ...
+         for {
+            select {
+               case <-b.Wait():
+                  // ReleaseAndReset <- struct{}{} was invoked
+               case <-b.Done
+                  // *always* include a <-b.Done in
+                  // your select to avoid deadlock
+                  // on shutdown.
+                  ...
           }
        }
 
