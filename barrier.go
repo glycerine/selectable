@@ -17,7 +17,7 @@ sample use:
             select {
                case <-b.Wait():
                   // ReleaseAndReset <- struct{}{} was invoked
-               case <-b.Done
+               case <-b.Done:
                   // *always* include a <-b.Done in
                   // your select to avoid deadlock
                   // on shutdown.
@@ -25,7 +25,7 @@ sample use:
                ...
             }
           }
-       }
+       }()
 
 copyright (c) 2016 Jason E. Aten
 
@@ -51,7 +51,6 @@ type Barrier struct {
 	// to Wait().
 	//
 	// e.g. b.ReleaseAndReset <- struct{}{}
-	//
 	ReleaseAndReset chan struct{}
 
 	// RequestStop is used to shutdown the Barrier
@@ -68,7 +67,6 @@ type Barrier struct {
 	// If client instead sends true on b.RequestStop,
 	// all waiting goroutines will be released, and then
 	// the Barrier goroutine will be shut down.
-	//
 	RequestStop chan bool
 
 	// Done will be closed when the
@@ -141,6 +139,11 @@ func NewBarrier() *Barrier {
 // in your select to handle shutdown
 // gracefully.
 //
+// ReleaseAndReset causes a new wait
+// channel to be created. All calls
+// to Wait() that follow will get this
+// new wait channel, until the next
+// call to ReleaseAndReset.
 func (b *Barrier) Wait() chan struct{} {
 	return <-b.waitForRelease
 }
