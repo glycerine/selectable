@@ -9,16 +9,18 @@ the cental logic inside the Barrier looks like this:
       for {
          select {
          case <-b.ReleaseAndReset:
-            close(b.waitCh)
-            b.waitCh = make(chan struct{})
+            close(b.waitCh) // release all waiting goroutines
+            b.waitCh = make(chan struct{}) // and make a new wait channel
+            
          case b.waitForRelease <- b.waitCh:
             // only send b.waitCh, nothing else.
+            
          case withRelease := <-b.RequestStop:
             if withRelease {
-               close(b.waitCh)
+               close(b.waitCh) // release all waiting goroutines
             }
-            close(b.waitForRelease)
-            close(b.Done)
+            close(b.waitForRelease) // return nil wait channel from now all
+            close(b.Done) // signal that shutdown is complete
             return
          }
       }
@@ -31,8 +33,9 @@ and the Barrier is used like this:
       go func() {
          for {
             select {
-               case <-b.Wait():
+               case <-b.Wait(): // wait here for release.
                   // ReleaseAndReset <- struct{}{} was invoked
+                  
                case <-b.Done:
                   // *always* include a <-b.Done in
                   // your select to avoid deadlock
@@ -44,7 +47,7 @@ and the Barrier is used like this:
        }()
 
        ...
-       b.ReleaseAndReset <- struct{}{}
+       b.ReleaseAndReset <- struct{}{} // release the kraken!
        ...
 ```
 
