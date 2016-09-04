@@ -1,7 +1,7 @@
 # selectable
 selectable.Barrier is a select{}-friendly barrier. A rendezvous point for goroutines.
 
-[docs at https://godoc.org/github.com/glycerine/selectable](https://godoc.org/github.com/glycerine/selectable])
+[docs at https://godoc.org/github.com/glycerine/selectable](https://godoc.org/github.com/glycerine/selectable)
 
 the cental logic inside the Barrier looks like this:
 
@@ -76,7 +76,7 @@ and the Barrier is used like this:
        ...
 ```
 
-[docs at https://godoc.org/github.com/glycerine/selectable](https://godoc.org/github.com/glycerine/selectable])
+[docs at https://godoc.org/github.com/glycerine/selectable](https://godoc.org/github.com/glycerine/selectable)
 
 Author: Jason E. Aten, Ph.D.
 
